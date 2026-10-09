@@ -194,8 +194,9 @@ possible, document the alternative and any metadata/history limitations.
 
 Each maintained sample or variant MUST have a named owner, a clear feature goal,
 documented build/deployment commands, required services, and the runtime,
-buildpack release and stack combinations actually tested. Owners SHOULD maintain
-repeatable smoke checks and dependency updates. Initial validation MUST cover
+buildpack release and stack combinations actually tested. Owners MUST maintain
+repeatable automated checks and a dependency-update process as specified below.
+Initial validation MUST cover
 all stacks available in kind-deployment, currently cflinuxfs4 and cflinuxfs5;
 successful validation does not imply compatibility with future stack or
 buildpack versions.
@@ -203,6 +204,37 @@ buildpack versions.
 No budget, delivery date or final repository count is established by the source
 review. Capacity and sequencing MUST be agreed with the maintainers before
 execution; claimed savings require a separate estimate.
+
+### Automated dependency maintenance
+
+Maintained sample repositories MUST configure automated dependency-update PRs,
+using Dependabot, Renovate or equivalent tooling, for supported ecosystems and
+all relevant sample/variant directories. Include manifests and lockfiles, and
+keep CI dependencies updated. Document the update cadence and any tooling gaps;
+an owner MUST provide a maintenance process for unsupported dependencies.
+
+Update PRs MUST run the applicable automated build/unit tests and feature smoke
+tests using kind-deployment, the latest respective buildpacks and all available
+stacks, currently cflinuxfs4 and cflinuxfs5. Test the affected runnable variants,
+not just dependency installation. Required results MUST apply to the current PR
+revision against the current target branch. Failed, missing, skipped or stale
+required checks MUST block merging.
+
+Repositories MAY enable auto-merge without individual maintainer review for
+dependency-only PRs from trusted update automation that meet an owner-approved
+eligibility policy. The initial policy SHOULD allow only explicitly eligible
+patch/minor updates whose behavior is covered by the required test suite.
+Patch/minor labels alone are not evidence of compatibility. Auto-merge MUST
+respect repository rules and required status checks; it MUST NOT bypass them.
+
+Major-version updates, runtime-target changes, CI workflow/test changes and
+updates outside the eligibility policy MUST receive maintainer review. A named
+owner remains accountable for the policy, failed/blocked updates and regressions,
+even when routine updates merge automatically. Use least-privilege automation
+credentials and protect validation access from untrusted PR code.
+
+This RFC proposes the automation requirements; it does not claim that the bots,
+test suites or auto-merge rules are already configured.
 
 ### Execution and validation
 
@@ -287,7 +319,8 @@ and ambiguity. No delivery effort or maintenance reduction has been measured.
 
 Completion means every reviewed repository has a recorded disposition, every
 retirement has passed its gates, retained/replacement examples have documented
-owners and tested deployment paths, and the four initially unrepresented
+owners, tested deployment paths and operational dependency-update automation
+with required checks, and the four initially unrepresented
 buildpacks have explicit validated samples. It does not mean all historical
 business functionality is recreated or that exactly ten repositories remain.
 
