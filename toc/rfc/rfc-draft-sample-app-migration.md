@@ -25,13 +25,10 @@ to 10 other existing sample repositories. Those 10 are not new repositories and
 are not the complete future portfolio.
 
 Approval establishes the proposed portfolio direction and migration safeguards.
-It does not authorize immediate archiving or deletion. The review is static:
-applications have not been built, staged, or validated on a current CF platform.
-The Buildpacks and Stacks and Docs working groups will review and approve this
-RFC. Validation will use kind-deployment with the latest respective buildpacks
-on all available stacks, currently cflinuxfs4 and cflinuxfs5.
-The destination organization, ownership assignments and implementation schedule
-remain explicit decisions required before repository moves begin.
+The Buildpacks and Stacks and Docs working groups will review this proposal.
+Validation will use kind-deployment with the latest respective buildpacks on all
+available stacks, currently cflinuxfs4 and cflinuxfs5. This is a source-based
+proposal, not a report of successful deployments or approval to retire repositories.
 
 ## Problem
 
@@ -55,7 +52,23 @@ artifacts, direct JRuby deployment and vendored dependency variants. Meanwhile,
 sidecars, routing, scaling and service brokers have platform value independent
 of buildpack feature coverage and should not be removed as language duplicates.
 
+The reviewed kind-deployment tooling also needs explicit preparation for this
+test scope. Its [README](https://github.com/cloudfoundry/kind-deployment/blob/ad1ec94eacfdd41c09babb07d5290d12bdeef120/README.md)
+documents Java, Node.js, Go and Binary as the default bootstrap set. The
+[upload script](https://github.com/cloudfoundry/kind-deployment/blob/ad1ec94eacfdd41c09babb07d5290d12bdeef120/scripts/upload_buildpacks.sh)
+takes buildpack versions from `versions.yaml`, lists cflinuxfs4 and cflinuxfs5,
+and adds further language/serving buildpacks for the complete bootstrap. Apt is
+absent from both sets. A default or complete bootstrap therefore does not
+establish that every required buildpack is installed at its latest version, or
+that both stacks have been tested.
+
 ## Proposal
+
+### Goals
+
+- Maintain a clear, owned set of examples for distinct CF deployment capabilities.
+- Reduce duplicate examples without losing packaging, worker and composition paths.
+- Keep examples current through automated dependency updates and deployment tests.
 
 ### Scope and non-goals
 
@@ -70,9 +83,8 @@ the selected deployment/configuration demonstrations, not full application
 behavior. Known users requiring excluded functionality MUST receive a separate
 owner decision before their source repository is retired.
 
-MUST, SHOULD and MAY express requirements of this proposal, not actions already
-performed. A recipe is not evidence of a working integration, and a documented
-variant is not evidence of successful staging.
+Recipes and documented variants are proposed examples, not evidence of successful
+staging. No application builds or CF deployments were performed in the analysis.
 
 ### Portfolio decisions
 
@@ -85,9 +97,8 @@ variant is not evidence of successful staging.
 | Exclude from sample-app migration | 8 | Handle supporting, documentation or superseded repositories separately; exclusion does not authorize deletion. |
 
 These categories total 73. They are proposals based on the reviewed snapshot,
-not an assertion that every retained example works today. Owners MAY revise an
-individual disposition when new usage or feature evidence emerges, but MUST
-record the reason and any revised replacement mapping.
+not an assertion that every retained example works today. If new usage or feature
+evidence changes a recommendation, record the reason and revised replacement.
 
 The proposed retain-and-modernize set is:
 
@@ -117,8 +128,8 @@ The eight capability-preserving replacement cases are:
 - springmvc-hibernate-template
 - zentasks-scala-cloudfoundry
 
-Preserve their selected capabilities through
-current variants; do not assume Phalcon availability, legacy PHP extension
+Preserve their selected capabilities through current variants; do not assume
+Phalcon availability, legacy PHP extension
 compatibility or that historical JRuby/WAR packaging covers direct JRuby.
 
 The eleven separate platform/service decisions concern:
@@ -135,8 +146,7 @@ The eleven separate platform/service decisions concern:
 - ratelimit-service
 - multi-process-sample
 
-In particular,
-the consolidation plan selects rabbitmq-cloudfoundry-samples as its messaging
+The consolidation plan selects rabbitmq-cloudfoundry-samples as its messaging
 destination: archiving it instead MUST block dependent retirements until a
 revised messaging destination is agreed and validated.
 
@@ -144,7 +154,7 @@ revised messaging destination is agreed and validated.
 
 Consolidation means maintaining a smaller set of representative demonstrations,
 not merging the old business applications into a single large application.
-Variants SHOULD be small and independently deployable. Do not require every
+Keep variants small and independently deployable. Do not require every
 database or external service merely to run the baseline example.
 
 | Destination | Selected repository | Required work from the consolidation plan |
@@ -162,15 +172,15 @@ database or external service merely to run the baseline example.
 
 These ten destinations are six retain-and-modernize examples, three replacement
 cases and one separately evaluated messaging repository. They overlap the
-portfolio categories; they MUST NOT be added to the category totals or presented
-as the final number of maintained repositories. Several required variants do
+portfolio categories; they are not additional repositories and do not define
+the final number of maintained repositories. Several required variants do
 not yet exist.
 
 The detailed analysis provides a source-to-destination decision for each of the
 34 candidates, including current overlap, required additions, excluded business
-scope and retirement prerequisites. That mapping MUST accompany RFC review and
-be used as the implementation baseline. Shared variants MUST be implemented
-once per destination rather than copied from each retiring application.
+scope and retirement prerequisites. Publish that mapping with the RFC and use
+it as the implementation baseline. Implement shared variants once per destination
+rather than copying them from each retiring application.
 
 For example, enki, rails_sample_app and pong_matcher_rails map to
 cf-sample-app-rails. MySQL/PostgreSQL and controlled migrations must be added
@@ -187,42 +197,37 @@ a repository. Their names and repository locations remain to be agreed.
 Preserve Java WAR, executable JAR, Groovy source, Play and distribution paths;
 direct JRuby; PHP CLI/tasks; and Apt composition. Add common variants to existing
 examples, including Yarn/pnpm, published .NET artifacts and vendored dependencies.
-More specialized agents, proxies and configuration flags SHOULD be prioritized
+More specialized agents, proxies and configuration flags should be prioritized
 by user need rather than requiring exhaustive public sample coverage.
 
-Coverage MUST distinguish app-side service configuration from buildpack-injected
-integrations. Current PHP user-extension behavior MUST be verified before a
+Distinguish app-side service configuration from buildpack-injected integrations.
+Verify current PHP user-extension behavior before a
 replacement relies on the documented JSON extension mechanism.
 
 ### Repository location, ownership and maintenance
 
 This RFC requires review and approval by both the Buildpacks and Stacks working
-group and the Docs working group. Relevant platform/service maintainers SHOULD
-participate in decisions affecting their examples.
+group and the Docs working group. Relevant platform/service maintainers should
+participate in decisions affecting their examples. Actual repository ownership
+changes, creation, renaming or archiving follow the existing
+[repository ownership process](rfc-0007-repository-ownership.md), including TOC
+and affected working-group approvals where required; this RFC does not replace it.
 
-Before moving repositories, sponsors and maintainers MUST agree the destination
-organization, responsible maintainers, repository permissions and security/
-disclosure ownership. This RFC does not assume a particular new organization
-or require moving repositories if their current location remains appropriate.
+Before a move, agree the destination organization, owners, permissions and
+security/disclosure responsibility. A new organization is not assumed, and a
+repository need not move if its current location remains appropriate.
 
 For retained repositories moving between organizations, prefer a GitHub transfer
-where available so history and collaboration metadata can be retained. Verify
-the effects on issues, pull requests, releases, redirects, CI secrets and
-integrations rather than assuming everything transfers. If a transfer is not
-possible, document the alternative and any metadata/history limitations.
+where available. Check history, issues, pull requests, releases, redirects and
+CI integrations before and after transfer; document limitations of any alternative.
 
-Each maintained sample or variant MUST have a named owner, a clear feature goal,
-documented build/deployment commands, required services, and the runtime,
-buildpack release and stack combinations actually tested. Owners MUST maintain
-repeatable automated checks and a dependency-update process as specified below.
-Initial validation MUST cover
-all stacks available in kind-deployment, currently cflinuxfs4 and cflinuxfs5;
-successful validation does not imply compatibility with future stack or
-buildpack versions.
+Each maintained example needs a named owner, feature goal, runnable instructions,
+required services and recorded runtime/buildpack/stack support. Owners maintain
+the automated checks and update process below. Successful tests establish only
+the recorded combinations, not compatibility with future versions.
 
-No budget, delivery date or final repository count is established by the source
-review. Capacity and sequencing MUST be agreed with the maintainers before
-execution; claimed savings require a separate estimate.
+Owners and implementation capacity remain to be agreed. The source review does
+not establish delivery dates, costs, savings or a final repository count.
 
 ### Automated dependency maintenance
 
@@ -230,30 +235,30 @@ Maintained sample repositories MUST configure automated dependency-update PRs,
 using Dependabot, Renovate or equivalent tooling, for supported ecosystems and
 all relevant sample/variant directories. Include manifests and lockfiles, and
 keep CI dependencies updated. Document the update cadence and any tooling gaps;
-an owner MUST provide a maintenance process for unsupported dependencies.
+the owner provides a maintenance process for unsupported dependencies.
 
-Update PRs MUST run the applicable automated build/unit tests and feature smoke
+Update PRs run the applicable automated build/unit tests and feature smoke
 tests using kind-deployment, the latest respective buildpacks and all available
 stacks, currently cflinuxfs4 and cflinuxfs5. Test the affected runnable variants,
-not just dependency installation. Required results MUST apply to the current PR
+not just dependency installation. Required results apply to the current PR
 revision against the current target branch. Failed, missing, skipped or stale
 required checks MUST block merging.
 
-Repositories MAY enable auto-merge without individual maintainer review for
+Repositories can enable auto-merge without individual maintainer review for
 dependency-only PRs from trusted update automation that meet an owner-approved
-eligibility policy. The initial policy SHOULD allow only explicitly eligible
-patch/minor updates whose behavior is covered by the required test suite.
-Patch/minor labels alone are not evidence of compatibility. Auto-merge MUST
-respect repository rules and required status checks; it MUST NOT bypass them.
+eligibility policy. Start with explicitly eligible patch/minor updates covered
+by the test suite; a version label alone is not evidence of compatibility.
+Auto-merge must respect repository rules and cannot bypass required status checks.
 
 Major-version updates, runtime-target changes, CI workflow/test changes and
 updates outside the eligibility policy MUST receive maintainer review. A named
-owner remains accountable for the policy, failed/blocked updates and regressions,
-even when routine updates merge automatically. Use least-privilege automation
-credentials and protect validation access from untrusted PR code.
+owner handles blocked updates and regressions even when routine updates merge
+automatically. Use least-privilege credentials and protect validation access
+from untrusted PR code.
 
-This RFC proposes the automation requirements; it does not claim that the bots,
-test suites or auto-merge rules are already configured.
+If an automatically merged update breaks an example, pause auto-merge for that
+update class, revert or fix the dependency change, and rerun the affected stack
+matrix before re-enabling it. Automation and tests are proposed, not configured.
 
 ### Execution and validation
 
@@ -263,11 +268,11 @@ test suites or auto-merge rules are already configured.
 2. **Deliver representatives:** Modernize retained examples and implement the
    capability-preserving replacements and shared consolidation variants. Do
    not archive a source merely because its replacement has a README.
-3. **Validate:** Build and deploy each required variant using kind-deployment
-  with the latest buildpack for its respective language or serving capability,
-  on all available stacks, currently cflinuxfs4 and cflinuxfs5. Inspect detected
-  container, staging logs and startup commands; perform HTTP, worker, task and
-  binding smoke tests.
+3. **Validate:** Prepare kind-deployment with the latest buildpack for each
+  required language/serving capability, plus Apt for the composition example.
+  Build and deploy each required variant on all available stacks, currently
+  cflinuxfs4 and cflinuxfs5. Check detected container, staging logs and startup
+  commands; perform HTTP, worker, task and binding smoke tests.
 4. **Close coverage gaps:** Add and validate the explicit missing buildpack
    examples and prioritized dependency/configuration variants. This work can
    run alongside representative modernization.
@@ -275,26 +280,23 @@ test suites or auto-merge rules are already configured.
    gates pass; keep unready sources available with accurate status notices.
 
 At the start of each validation run, resolve the latest respective buildpack
-and record its exact version and artifact or commit identifier. Explicitly
-select each stack rather than relying on a default. For multi-buildpack examples,
-use the latest respective constituent buildpacks, including Apt and PHP where
-applicable. Record the kind-deployment revision and available stack inventory
-so the tested matrix is reproducible. Any unavailable or failing required
-combination MUST be recorded and resolved before the dependent retirement gate
-can pass; do not silently omit a stack.
+and record its exact version/artifact; do not assume the bootstrap pins are
+latest. Install or update the required artifacts through the CF buildpack API/CLI,
+including any buildpack omitted by the bootstrap. Use the latest respective
+constituents for multi-buildpack examples. Verify installed buildpacks and stacks,
+explicitly select each stack, and record the kind-deployment revision. Do not
+modify deployment tooling as part of this RFC merely to hide a preparation gap.
 
-Validation MUST demonstrate the intended feature: actual Apt package use,
-appropriate worker health checks, sidecar memory/process behavior, and explicit
-buildpack/container selection for packaging variants. Offline/vendored claims
-require a test without dependency-network access. Do not publish secrets or
-unredacted environment/service-credential dumps. Service instances and validation
-access for kind-deployment MUST be provided; credentials MUST be handled outside
-public repositories.
+Required combinations that are unavailable or fail remain blocked, not skipped.
+Tests demonstrate the selected feature: actual Apt package use, appropriate
+worker health checks, sidecar memory/process behavior and the intended packaging
+container. Offline/vendored claims require testing without dependency-network
+access. Provide required service instances and isolate test data and credentials;
+never publish secrets or full environment/credential dumps.
 
-Record validation evidence in a migration checklist: source, destination and
-variant, owner, kind-deployment revision, exact buildpack/runtime versions and
-artifacts, stack, result, documentation references and retirement approval.
-Revalidate any replacement affected by later material runtime/buildpack changes.
+Keep a migration checklist with source, destination/variant, owner, deployment
+revision, exact tested runtime/buildpack artifacts, stack, result and retirement
+approval. Refresh affected tests after material runtime/buildpack changes.
 
 ### Retirement gates and compatibility
 
@@ -306,17 +308,17 @@ A source repository MUST NOT be archived until:
   excluded business functionality and any unresolved usage are addressed.
 - Its README identifies its disposition, supported successor and limitations;
   references under community control are updated.
-- Useful test assets/recipes are preserved and the owner records approval.
+- Useful test assets/recipes are preserved and required owner/governance
+  approvals are recorded.
 
 Prefer archiving over deletion so historical code and discussions remain
 accessible. This proposal authorizes no repository deletion. Archiving does
 not provide ongoing security maintenance; historical examples MUST NOT be
 advertised as current production-ready applications.
 
-If replacement validation fails, postpone the affected retirement. If a
-post-migration issue invalidates a replacement, update notices and references,
-repair or revise the destination, and reconsider the affected disposition with
-the owner. Do not describe old runtimes as a supported fallback.
+If replacement validation fails, postpone retirement. If a later failure
+invalidates it, update notices, repair the destination and revisit the source
+disposition with its owner. Old runtimes are not a supported fallback.
 
 ### Alternatives considered
 
@@ -330,11 +332,20 @@ the owner. Do not describe old runtimes as a supported fallback.
 
 ### Risks and expected outcomes
 
-Risks include losing undocumented usage, underestimating modernization effort,
-introducing unverified service/extension assumptions, and concentrating work on
-destinations without committed owners. The gates above limit feature loss;
-named ownership, independent variants and recorded validation reduce coupling
-and ambiguity. No delivery effort or maintenance reduction has been measured.
+| Failure scenario | Response |
+| --- | --- |
+| A target repository lacks a required DB, worker or packaging variant. | Implement and validate it before retiring dependent sources; a shared language is not enough. |
+| Bootstrap installs older versions or omits Apt/a required stack artifact. | Prepare and verify the explicit test matrix; leave affected validation blocked rather than silently reducing coverage. |
+| A service-dependent test cannot run or a required CI check is skipped. | Block merge/retirement and provide the missing service or test; an HTTP-only test cannot establish a binding or worker claim. |
+| An auto-merged dependency update passes incomplete tests but breaks the example. | Pause the affected auto-merge policy, revert/fix and add a regression check before revalidation. |
+| A tutorial or user still depends on excluded business functionality. | Resolve usage with the owner and update references before archiving; the small sample is not a drop-in application replacement. |
+
+The trade-off is less duplicate maintenance in exchange for investment in
+shared variants, a two-stack test environment and dependency automation.
+Those shared destinations need committed owners; neither effort nor savings
+has been measured. A moving latest-buildpack matrix can expose infrastructure
+or upstream regressions, so failed runs need diagnosis rather than automatic
+relaxation of the acceptance criteria.
 
 Completion means every reviewed repository has a recorded disposition, every
 retirement has passed its gates, retained/replacement examples have documented
@@ -346,11 +357,13 @@ business functionality is recreated or that exactly ten repositories remain.
 ### Open decisions before implementation
 
 - What is the destination organization, if a repository move is desired, and
-  who has authority to approve transfers and archiving?
+  which current ownership/charter entries and RFC 0007 approvals need updating?
 - Which maintainers own the retained examples, replacement cases and missing
   buildpack samples, with what implementation/review capacity?
 - Which service instances and access will be provided in kind-deployment,
   and how will repeatable validation checks be maintained?
+- Should the latest-buildpack test source use published releases or default-branch
+  builds? Agree the source before configuring CI; record exact artifacts in either case.
 - What are the owner decisions for the eleven platform/service demonstrations
   and the eight supporting/superseded projects?
 
