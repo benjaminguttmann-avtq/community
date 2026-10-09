@@ -106,17 +106,36 @@ The proposed retain-and-modernize set is:
 | cf-ex-stand-alone | PHP CLI/non-web processes and CF tasks. |
 | cf-ex-pgbouncer | Apt plus PHP, package installation and an additional process. |
 
-The eight capability-preserving replacement cases are cf-ex-phalcon,
-cf-ex-phpmyadmin, jruby-rails-bookshelf, pong_matcher_groovy, resque-sample,
-spring-batch-tweet-workers, springmvc-hibernate-template and
-zentasks-scala-cloudfoundry. Preserve their selected capabilities through
+The eight capability-preserving replacement cases are:
+
+- cf-ex-phalcon
+- cf-ex-phpmyadmin
+- jruby-rails-bookshelf
+- pong_matcher_groovy
+- resque-sample
+- spring-batch-tweet-workers
+- springmvc-hibernate-template
+- zentasks-scala-cloudfoundry
+
+Preserve their selected capabilities through
 current variants; do not assume Phalcon availability, legacy PHP extension
 compatibility or that historical JRuby/WAR packaging covers direct JRuby.
 
-The eleven separate platform/service decisions concern capi-sidecar-samples,
-cf-autoscaler, cf-s3-demo, fib-cpu, github-service-broker-ruby,
-go_service_broker, http2_tile_demo, rabbitmq-cloudfoundry-samples,
-rails-elastic-search, ratelimit-service and multi-process-sample. In particular,
+The eleven separate platform/service decisions concern:
+
+- capi-sidecar-samples
+- cf-autoscaler
+- cf-s3-demo
+- fib-cpu
+- github-service-broker-ruby
+- go_service_broker
+- http2_tile_demo
+- rabbitmq-cloudfoundry-samples
+- rails-elastic-search
+- ratelimit-service
+- multi-process-sample
+
+In particular,
 the consolidation plan selects rabbitmq-cloudfoundry-samples as its messaging
 destination: archiving it instead MUST block dependent retirements until a
 revised messaging destination is agreed and validated.
