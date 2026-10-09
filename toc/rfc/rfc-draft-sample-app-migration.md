@@ -150,31 +150,19 @@ The consolidation plan selects rabbitmq-cloudfoundry-samples as its messaging
 destination: archiving it instead MUST block dependent retirements until a
 revised messaging destination is agreed and validated.
 
-### Consolidation destinations and missing variants
+### Consolidation approach
 
 Consolidation means maintaining a smaller set of representative demonstrations,
 not merging the old business applications into a single large application.
 Keep variants small and independently deployable. Do not require every
 database or external service merely to run the baseline example.
 
-| Destination | Selected repository | Required work from the consolidation plan |
-| --- | --- | --- |
-| T-GO | test-app | Bound MySQL variant with a minimal persistent API and schema/migration step. |
-| T-NODE | cf-sample-app-nodejs | MySQL API, WebSocket echo, native-module staging check and UTF-8 response test. |
-| T-RAILS | cf-sample-app-rails | MySQL/PostgreSQL bindings, controlled migration tasks, Unicorn start profile and mail recipe. Current baseline uses SQLite. |
-| T-RUBY | ruby-sample-app | Bound Redis read/write example; a genuine worker remains a separate capability-preserving replacement. |
-| T-SPRING | spring-music | Validate existing SQL/MongoDB/Redis profiles; add redacted environment visibility and a mail recipe. |
-| T-WAR | springmvc-hibernate-template | Reduce to a current WAR/servlet example with relational binding and cache configuration. |
-| T-JAVA | spring-batch-tweet-workers | Separate executable Java Main web JAR and bin/lib worker-distribution variants. |
-| T-DIST | pong_matcher_groovy | Modernize DistZip/Ratpack; add generic launcher/PORT and a protocol echo variant. |
-| T-PHP | cf-ex-composer | MySQL/PostgreSQL bindings, routed API and supported artifact-preparation recipe; no legacy Python download hooks. |
-| T-AMQP | rabbitmq-cloudfoundry-samples | Modern Java producer/worker and Node consumer, deterministic input, streaming variant and shared smoke tests. |
-
-These ten destinations are six retain-and-modernize examples, three replacement
+The ten selected destinations are six retain-and-modernize examples, three replacement
 cases and one separately evaluated messaging repository. They overlap the
 portfolio categories; they are not additional repositories and do not define
 the final number of maintained repositories. Several required variants do
-not yet exist.
+not yet exist. The [Appendix](#consolidation-destinations-and-missing-variants)
+lists the selected repositories and required variants.
 
 The detailed analysis provides a source-to-destination decision for each of the
 34 candidates, including current overlap, required additions, excluded business
@@ -260,7 +248,7 @@ If an automatically merged update breaks an example, pause auto-merge for that
 update class, revert or fix the dependency change, and rerun the affected stack
 matrix before re-enabling it. Automation and tests are proposed, not configured.
 
-### Execution and validation
+## Rollout and validation
 
 1. **Confirm the baseline:** Publish the reviewed inventory and mappings,
    resolve owners and destination location, check existing users/references,
@@ -298,7 +286,7 @@ Keep a migration checklist with source, destination/variant, owner, deployment
 revision, exact tested runtime/buildpack artifacts, stack, result and retirement
 approval. Refresh affected tests after material runtime/buildpack changes.
 
-### Retirement gates and compatibility
+## Retirement criteria and compatibility
 
 A source repository MUST NOT be archived until:
 
@@ -320,7 +308,7 @@ If replacement validation fails, postpone retirement. If a later failure
 invalidates it, update notices, repair the destination and revisit the source
 disposition with its owner. Old runtimes are not a supported fallback.
 
-### Alternatives considered
+## Alternatives considered
 
 | Alternative | Assessment |
 | --- | --- |
@@ -330,7 +318,7 @@ disposition with its owner. Old runtimes are not a supported fallback.
 | Create one large multi-feature application | Couples unrelated services and makes individual deployment paths harder to understand and validate. |
 | Proposed representative portfolio with runnable variants | Preserves selected capabilities with shared maintenance; requires explicit ownership, implementation and validation before retirement. |
 
-### Risks and expected outcomes
+## Risks and expected outcomes
 
 | Failure scenario | Response |
 | --- | --- |
@@ -354,7 +342,7 @@ with required checks, and the four initially unrepresented
 buildpacks have explicit validated samples. It does not mean all historical
 business functionality is recreated or that exactly ten repositories remain.
 
-### Open decisions before implementation
+## Open decisions before implementation
 
 - What is the destination organization, if a repository move is desired, and
   which current ownership/charter entries and RFC 0007 approvals need updating?
@@ -366,6 +354,27 @@ business functionality is recreated or that exactly ten repositories remain.
   builds? Agree the source before configuring CI; record exact artifacts in either case.
 - What are the owner decisions for the eleven platform/service demonstrations
   and the eight supporting/superseded projects?
+
+## Appendix
+
+### Consolidation destinations and missing variants
+
+These are the ten existing destinations selected for the 34 consolidation
+candidates. The required work is proposed, not already implemented. Keep each
+variant independently deployable.
+
+| Destination | Selected repository | Required work from the consolidation plan |
+| --- | --- | --- |
+| T-GO | test-app | Bound MySQL variant with a minimal persistent API and schema/migration step. |
+| T-NODE | cf-sample-app-nodejs | MySQL API, WebSocket echo, native-module staging check and UTF-8 response test. |
+| T-RAILS | cf-sample-app-rails | MySQL/PostgreSQL bindings, controlled migration tasks, Unicorn start profile and mail recipe. Current baseline uses SQLite. |
+| T-RUBY | ruby-sample-app | Bound Redis read/write example; a genuine worker remains a separate capability-preserving replacement. |
+| T-SPRING | spring-music | Validate existing SQL/MongoDB/Redis profiles; add redacted environment visibility and a mail recipe. |
+| T-WAR | springmvc-hibernate-template | Reduce to a current WAR/servlet example with relational binding and cache configuration. |
+| T-JAVA | spring-batch-tweet-workers | Separate executable Java Main web JAR and bin/lib worker-distribution variants. |
+| T-DIST | pong_matcher_groovy | Modernize DistZip/Ratpack; add generic launcher/PORT and a protocol echo variant. |
+| T-PHP | cf-ex-composer | MySQL/PostgreSQL bindings, routed API and supported artifact-preparation recipe; no legacy Python download hooks. |
+| T-AMQP | rabbitmq-cloudfoundry-samples | Modern Java producer/worker and Node consumer, deterministic input, streaming variant and shared smoke tests. |
 
 ### Supporting analysis
 
