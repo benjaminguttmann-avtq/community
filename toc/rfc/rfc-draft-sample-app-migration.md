@@ -2,7 +2,7 @@
 [meta]: #meta
 - Name: Sample Application Migration and Portfolio Consolidation
 - Start Date: 2026-10-09
-- Author(s): @benjaminguttmann_avtq
+- Author(s): @benjaminguttmann-avtq
 - Status: Draft
 - RFC Pull Request: Not yet submitted
 - Related RFCs:
